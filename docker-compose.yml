@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: postgrespass
+    volumes:
+      - ./postgres:/docker-entrypoint-initdb.d
+
+  dbt:
+    build:
+      context: ./dbt
+      dockerfile: Dockerfile
+    volumes:
+      - ./dbt/models:/home/dbt
+    depends_on:
+      - db
+    command: tail -f /dev/null  # Keeps the container running
